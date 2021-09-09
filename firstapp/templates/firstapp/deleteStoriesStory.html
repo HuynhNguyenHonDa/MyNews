@@ -1,0 +1,23 @@
+{% extends 'firstapp/masterbase.html' %}
+{% load static %}
+
+{% block content %}
+<br><br>
+    <h2 style="text-align: center;"> Delete StoriesStory</h2>
+    <div class="container m-5">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-body">
+                    <p> Bạn chắc chắn xoá "{{ storiesstory.name }}" </p> <input type="submit" name="Submit" id=""> 
+<form action="{% url 'deleteStoriesStory' storiesstory.id %}" method="POST" >
+            {% csrf_token %}
+            <a class="btn btn-warning" href="{% url 'quanTriduLieu' %}"> Cancel </a>
+            <br>
+            
+        </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock %}

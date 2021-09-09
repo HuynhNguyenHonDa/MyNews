@@ -1,0 +1,152 @@
+{% extends 'firstapp/masterbase.html' %}
+{% load static %}
+
+{% block title %}
+<title>Quản trị dữ liệu</title>
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.0/css/jquery.dataTables.css">
+
+<br><br>
+<h2 style="text-align: center;"> Quản trị dữ liệu</h2>
+
+<div class="table-responsive table-wrapper">
+    <table class="table table-bordered table-striped table-hover" id="table_id" width="100%" cellspacing="0">
+        <thead>
+            <div class="row">
+                <div class="col-md-10">
+                    {% if user.username  %}
+                </div><div class="col-md-1" style="margin: auto;"><a href="{% url 'addStoriesStory' %}" class="btn btn-primary" style="text-align: right;"><i class="material-icons" title="Add"></i> Add new</a></div>
+                {% endif %}
+            </div>
+            <br>
+            <tr>
+                
+                <th>ID</th>
+                <th width="550px">name</th>
+                <th>author</th>
+                <th>url</th>
+                <th>content</th>
+                <th>public_day</th>
+                <th>category</th>
+                <th>image</th>
+                {% if user.username == 'admin' %}
+                <th>Tác vụ</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in quantridulieu %}
+            <tr>
+                <td class="table-bordered ui-icon-radio-on "> <a href="#">{{ data.id }}</a></td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.name|truncatewords:10 }}</td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.author }}</td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.url|truncatechars:20 }}</td>
+                <td class="tablDe-bordered ui-icon-radio-on ">{{ data.content|safe|truncatewords:20 }}</td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.public_day }}</td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.category }}</td>
+                <td class="table-bordered ui-icon-radio-on ">{{ data.image|truncatechars:10 }}</td>
+                {% if user.username == 'admin' %}
+                <td class="table-bordered ui-icon-radio-on ">
+                    <!-- Button trigger modal -->
+                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#ws{{data.id}}">
+                        Delete
+                    </button> -->
+
+                    
+                    
+                    <a href="{% url 'editStoriesStory' data.id %}" class="btn btn-info"><i class="material-icons" title="Edit"></i> Edit</a>
+
+                    <a onclick="XacNhanXoa({{ data.id }})" href="#" class="delete btn btn-danger"><i
+                            class="material-icons" title="Delete">Delete</i></a></a>
+                    <!-- Modal -->
+                    <div class="modal fade" id="ws{{data.id}}" tabindex="-1" role="dialog"
+                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 style="text-align: center;" class="modal-title" id="exampleModalLabel">{{
+                                        data.name }}</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h2 style="text-align: center; color: red;"> DELETE {{ data.name }}</h2>
+                                    <div class="container m-5">
+                                        <form action="" method="post" enctype="multipart/form-data">
+                                            {% csrf_token %}
+                                            {{ form }}
+                                            <input type="submit" name="Submit" id=""> Add StoriesStory
+                                        </form>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                    <button type="submit" class="btn btn-primary">Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Delete Modal HTML -->
+                    <div id="deleteEmployeeModal" class="modal fade">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form>
+                                    <div class="modal-header">
+                                        <h4 class="modal-title" style="text-align: center">Xóa nội dung</h4>
+                                        <button type="button" class="close" data-dismiss="modal"
+                                            aria-hidden="true">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Bạn có chắc chắn muốn xóa Bản ghi này không?</p>
+                                        <p class="text-warning"><small>Hành động này không thể được hoàn tác.</small>
+                                        </p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <input type="button" class="btn btn-default" data-dismiss="modal"
+                                            value="Cancel">
+                                        <a class="btn btn-danger" onclick="Xoa()"> Delete</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+</div>
+
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+    var idcanxoa = null;
+
+    function Xoa() {
+        debugger;
+        location.href = "/deleteStoriesStory/" + idcanxoa;
+    }
+    function XacNhanXoa(id) {
+        $("#deleteEmployeeModal").modal()
+
+        idcanxoa = id;
+    }
+
+    $(document).ready(function () {
+        $('#table_id').DataTable();
+    });
+</script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.0/js/jquery.dataTables.js"></script>
+
+
+{% endblock %}
